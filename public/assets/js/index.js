@@ -5,10 +5,16 @@ let newNoteBtn;
 let noteList;
 
 if (window.location.pathname === '/notes') {
-    saveNoteBtn.addEventListener('click', handleNoteSave); // Show the save icon when clicked
-    newNoteBtn.addEventListener('click', handleNewNoteView); // Show empty fields to enter a new note
-    noteTitle.addEventListener('input', handleRenderSaveBtn); // Check for input in title field
-    noteText.addEventListener('input', handleRenderSaveBtn); // Check for input in text field
+    // saveNoteBtn.addEventListener('click', handleNoteSave); // Show the save icon when clicked
+    // newNoteBtn.addEventListener('click', handleNewNoteView); // Show empty fields to enter a new note
+    // noteTitle.addEventListener('input', handleRenderSaveBtn); // Check for input in title field
+    // noteText.addEventListener('input', handleRenderSaveBtn); // Check for input in text field
+    noteTitle = document.querySelector('.note-title');
+    noteText = document.querySelector('.note-textarea');
+    saveNoteBtn = document.querySelector('.save-note');
+    newNoteBtn = document.querySelector('.new-note');
+    noteList = document.querySelectorAll('.list-container .list-group');
+
   }
   
 
@@ -49,6 +55,9 @@ const deleteNote = (id) =>
       'Content-Type': 'application/json',
     },
   });
+ 
+  
+  
 
 const renderActiveNote = () => {
   hide(saveNoteBtn);

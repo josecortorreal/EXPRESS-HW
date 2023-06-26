@@ -4,12 +4,12 @@ const dbPath = path.join(__dirname, '../db/db.json');
 const fs = require('fs');
 
 
-app.get('/api/notes', (req, res) => {
+router.get('/api/notes', (req, res) => {
     const notesData = JSON.parse(fs.readFileSync(path.join(__dirname, 'db.json')));
     res.json(notesData);
   });
   
-  app.post('/api/notes', (req, res) => {
+  router.post('/api/notes', (req, res) => {
     const newNote = req.body;
     newNote.id = uuidv4();
   
@@ -20,7 +20,7 @@ app.get('/api/notes', (req, res) => {
     res.json(newNote);
   });
   
-  app.delete('/api/notes/:id', (req, res) => {
+  router.delete('/api/notes/:id', (req, res) => {
     const noteId = req.params.id;
   
     const notesData = JSON.parse(fs.readFileSync(path.join(__dirname, 'db.json')));
@@ -29,3 +29,6 @@ app.get('/api/notes', (req, res) => {
   
     res.sendStatus(200);
   });
+
+  module.exports = router;
+ 

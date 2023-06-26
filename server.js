@@ -2,6 +2,8 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
+const apiRoutes = require('./controllers/apiRoutes');
+const htmlRoutes = require('./controllers/htmlRoutes');
 
 
 const app = express();
@@ -10,6 +12,8 @@ const PORT = process.env.PORT || 3000;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static('public'));
+app.use('/api', apiRoutes);
+app.use('/' , htmlRoutes);
 
 
 // HTML Routes
@@ -22,31 +26,7 @@ app.get('*', (req, res) => {
 });
 
 // API Routes
-app.get('/api/notes', (req, res) => {
-  const notesData = JSON.parse(fs.readFileSync(path.join(__dirname, 'db.json')));
-  res.json(notesData);
-});
 
-app.post('/api/notes', (req, res) => {
-  const newNote = req.body;
-  newNote.id = uuidv4();
-
-  const notesData = JSON.parse(fs.readFileSync(path.join(__dirname, 'db.json')));
-  notesData.push(newNote);
-  fs.writeFileSync(path.join(__dirname, 'db.json'), JSON.stringify(notesData));
-
-  res.json(newNote);
-});
-
-app.delete('/api/notes/:id', (req, res) => {
-  const noteId = req.params.id;
-
-  const notesData = JSON.parse(fs.readFileSync(path.join(__dirname, 'db.json')));
-  const updatedNotesData = notesData.filter((note) => note.id !== noteId);
-  fs.writeFileSync(path.join(__dirname, 'db.json'), JSON.stringify(updatedNotesData));
-
-  res.sendStatus(200);
-});
 
 // Start the server
 app.listen(PORT, () => {
