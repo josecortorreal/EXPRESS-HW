@@ -120,8 +120,10 @@ const handleNewNoteView = (e) => {
 
 const handleRenderSaveBtn = () => {
   if (!noteTitle.value.trim() || !noteText.value.trim()) {
+    console.log('hide');
     hide(saveNoteBtn);
   } else {
+    console.log('show');
     show(saveNoteBtn);
   }
 };

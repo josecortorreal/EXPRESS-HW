@@ -4,31 +4,54 @@ const dbPath = path.join(__dirname, '../db/db.json');
 const fs = require('fs');
 
 
-router.get('/api/notes', (req, res) => {
-    const notesData = JSON.parse(fs.readFileSync(path.join(__dirname, 'db.json')));
-    res.json(notesData);
+
+
+router.get('/notes', (req, res) => {
+  fs.readFile(dbPath, 'utf8', (err, data) => {
+    if (err) throw err;
+    res.json(JSON.parse(data));
   });
-  
-  router.post('/api/notes', (req, res) => {
+});
+
+// POST /api/notes should receive a new note to save on the request body
+router.post('/notes', (req, res) => {
+    console.log("hi there");
     const newNote = req.body;
-    newNote.id = uuidv4();
+
   
-    const notesData = JSON.parse(fs.readFileSync(path.join(__dirname, 'db.json')));
-    notesData.push(newNote);
-    fs.writeFileSync(path.join(__dirname, 'db.json'), JSON.stringify(notesData));
-  
-    res.json(newNote);
+    // read the existing notes
+    fs.readFile(dbPath, 'utf8', (err, data) => {
+      if (err) throw err;
+      const notes = JSON.parse(data);
+
+      // generate a new ID for the note
+      let lastNoteId = notes.length > 0 ? notes[notes.length - 1].id : 0;
+      newNote.id = typeof lastNoteId === 'number' ? lastNoteId + 1 : 1;
+      notes.push(newNote);
+
+      // write the new note to file
+      fs.writeFile(dbPath, JSON.stringify(notes, null, 2), (err) => {
+        if (err) throw err;
+        res.json(newNote);
+      });
+    });
   });
   
-  router.delete('/api/notes/:id', (req, res) => {
-    const noteId = req.params.id;
-  
-    const notesData = JSON.parse(fs.readFileSync(path.join(__dirname, 'db.json')));
-    const updatedNotesData = notesData.filter((note) => note.id !== noteId);
-    fs.writeFileSync(path.join(__dirname, 'db.json'), JSON.stringify(updatedNotesData));
-  
-    res.sendStatus(200);
+
+router.delete('/notes/:id', (req, res) => {
+  const noteId = parseInt(req.params.id);
+  fs.readFile(dbPath, 'utf8', (err, data) => {
+    if (err) throw err;
+    let notes = JSON.parse(data);
+    notes = notes.filter(note => note.id !== noteId);
+    fs.writeFile(dbPath, JSON.stringify(notes, null, 2), (err) => {
+      if (err) throw err;
+      res.status(200).end();
+    });
   });
+});
+
+
 
   module.exports = router;
  

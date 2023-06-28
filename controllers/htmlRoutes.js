@@ -4,12 +4,14 @@ const path = require('path');
 
 
 router.get('/notes', (req, res) => {
-    res.sendFile('notes.html', { root: path.join(__dirname, '../public') });
+  console.log('grabbing the notes');
+    res.sendFile( path.join(__dirname, '../public/notes.html'));
   });
 
       //  should return the index.html file
 router.get('*', (req, res) => {
-    res.sendFile('index.html', { root: path.join(__dirname, '../public') });
+  console.log('grabbing the index file');
+    res.sendFile(path.join(__dirname, '../public/index.html'));
   });
 
 module.exports = router;
